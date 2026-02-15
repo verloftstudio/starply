@@ -2,85 +2,102 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #000;
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --border-color: rgba(255, 255, 255, 0.12);
-            --text-main: #fff;
+            --bg-black: #000000;
+            --glass-bg: rgba(255, 255, 255, 0.07);
+            --border-white: rgba(255, 255, 255, 0.12);
+            /* Стек шрифтов Gothic */
+            --font-gothic: "Century Gothic", AppleGothic, "Apple SD Gothic Neo", Futura, sans-serif;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, system-ui, sans-serif;
-            overflow: hidden;
+            background-color: var(--bg-black);
+            color: #ffffff;
+            font-family: var(--font-gothic);
             -webkit-font-smoothing: antialiased;
+            overflow: hidden;
         }
 
         .header-wrapper {
             padding: 16px;
+            display: flex;
         }
 
         .balance-card {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 24px;
-            border: 0.5px solid var(--border-color);
-            height: 44px;
+            height: 42px; /* Фиксированная высота для стабильности */
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 21px;
+            border: 1px solid var(--border-white);
+            padding: 0 4px; /* Внутренний отступ для центровки контента */
         }
 
         .user-section {
             display: flex;
             align-items: center;
-            padding: 0 12px 0 6px;
-            gap: 8px;
+            padding: 0 12px 0 4px;
         }
 
         .avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: #222;
             object-fit: cover;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #1a1a1a;
+            border: 0.5px solid rgba(255,255,255,0.1);
         }
 
         .username {
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: -0.2px;
+            margin-left: 10px;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .divider {
             width: 1px;
-            height: 100%;
-            background: var(--border-color);
+            height: 24px; /* Не на всю высоту, чтобы выглядело аккуратнее */
+            background: var(--border-white);
         }
 
         .stars-section {
             display: flex;
             align-items: center;
             padding: 0 14px 0 12px;
-            gap: 5px;
+            gap: 6px;
         }
 
         .count {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
+            line-height: 1; /* Убирает лишние отступы сверху/снизу цифр */
+            display: flex;
+            align-items: center;
             font-variant-numeric: tabular-nums;
         }
 
         .star-icon {
             display: flex;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+        }
+
+        /* Устранение смещения SVG */
+        svg {
+            display: block;
+            margin-bottom: 1px; /* Микро-корректировка для визуального центра */
         }
     </style>
 </head>
@@ -89,8 +106,8 @@
     <div class="header-wrapper">
         <div class="balance-card">
             <div class="user-section">
-                <img id="avatar" class="avatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
-                <span id="name" class="username">Guest</span>
+                <img id="avatar" class="avatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="">
+                <span id="name" class="username">GUEST</span>
             </div>
 
             <div class="divider"></div>
@@ -98,7 +115,7 @@
             <div class="stars-section">
                 <span id="stars-val" class="count">0</span>
                 <div class="star-icon">
-                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="15" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M6.63869 12.1902L3.50621 14.1092C3.18049 14.3087 2.75468 14.2064 2.55515 13.8807C2.45769 13.7216 2.42864 13.5299 2.47457 13.3491L2.95948 11.4405C3.13452 10.7515 3.60599 10.1756 4.24682 9.86791L7.6642 8.22716C7.82352 8.15067 7.89067 7.95951 7.81418 7.80019C7.75223 7.67116 7.61214 7.59896 7.47111 7.62338L3.66713 8.28194C2.89387 8.41581 2.1009 8.20228 1.49941 7.69823L0.297703 6.69116C0.00493565 6.44581 -0.0335059 6.00958 0.211842 5.71682C0.33117 5.57442 0.502766 5.48602 0.687982 5.47153L4.35956 5.18419C4.61895 5.16389 4.845 4.99974 4.94458 4.75937L6.36101 1.3402C6.5072 0.987302 6.91179 0.819734 7.26469 0.965925C7.43413 1.03612 7.56876 1.17075 7.63896 1.3402L9.05539 4.75937C9.15496 4.99974 9.38101 5.16389 9.6404 5.18419L13.3322 5.47311C13.713 5.50291 13.9975 5.83578 13.9677 6.2166C13.9534 6.39979 13.8667 6.56975 13.7269 6.68896L10.9114 9.08928C10.7131 9.25826 10.6267 9.52425 10.6876 9.77748L11.5532 13.3733C11.6426 13.7447 11.414 14.1182 11.0427 14.2076C10.8642 14.2506 10.676 14.2208 10.5195 14.1249L7.36128 12.1902C7.13956 12.0544 6.8604 12.0544 6.63869 12.1902Z" fill="white"/>
                     </svg>
                 </div>
@@ -116,19 +133,22 @@
             };
 
             tg.expand();
+            tg.ready();
             tg.headerColor = '#000000';
             tg.backgroundColor = '#000000';
 
             const user = tg.initDataUnsafe?.user;
             
             if (user) {
-                ui.name.textContent = user.first_name || 'User';
-                if (user.photo_url) ui.avatar.src = user.photo_url;
+                ui.name.textContent = (user.first_name || 'USER').toUpperCase();
+                if (user.photo_url) {
+                    ui.avatar.src = user.photo_url;
+                }
             }
 
-            // Инициализация баланса
-            let currentStars = 0;
-            ui.stars.textContent = currentStars;
+            // Установите нужное число звезд здесь
+            const currentStars = 1250; 
+            ui.stars.textContent = currentStars.toLocaleString();
         })();
     </script>
 </body>
